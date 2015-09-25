@@ -24,19 +24,9 @@ package = "pycurl"
 version = "7.19.5.1"
 
 import os
-import sys
-import platform
-import distutils.util
+import _platform
 
-plat_name = distutils.util.get_platform()
-# distutils (os.uname actually) gives the undesired result for linux x86
-# running in a chroot/docker on an x64 machine.
-if plat_name == 'linux-x86_64':
-    if platform.architecture()[0] == '32bit':
-        plat_name = 'linux-i686'
-
-target_version = sys.version[0:3]
-binary_package_name = "%s-%s-py%s-%s" % (package, version, target_version, plat_name)
+binary_package_name = _platform.get_archive_basename('-'.join((package,version)))
 binary_package_path = os.path.abspath(os.path.join(os.path.dirname(__file__), binary_package_name))
 
 if not binary_package_path or not os.path.exists(binary_package_path):
